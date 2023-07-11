@@ -1,0 +1,34 @@
+linters:
+  disable-all: true
+  enable:
+    - depguard
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - gofmt
+    - goimports
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nolintlint
+    - prealloc
+    - staticcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+
+linters-settings:
+  lll:
+    line-length: 197
+  goimports:
+    local-prefixes: github.com/makkes/garage
+  depguard:
+    list-type: blacklist

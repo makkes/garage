@@ -1,0 +1,74 @@
+project_name: garage
+
+changelog:
+  use: github
+  groups:
+    - title: Features
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 1
+  filters:
+    exclude:
+      - '^docs:'
+      - '^chore:'
+      - '^build:'
+
+release:
+  footer: |
+    ### Summary
+    **Full Changelog**: https://github.com/makkes/garage/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+builds:
+  - id: garage
+    binary: garage
+    main: ./cmd/garage
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s
+      - -w
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm
+      - arm64
+    mod_timestamp: '{{ .CommitTimestamp }}'
+universal_binaries:
+  - replace: true
+    id: garage
+    name_template: 'garage_{{.Version}}'
+archives:
+  - name_template: '{{ .ProjectName }}_v{{trimprefix .Version "v"}}_{{ .Os }}_{{ .Arch }}'
+  # This is a hack documented in https://github.com/goreleaser/goreleaser/blob/df0216d5855e9283d2106fb5acdb0e7b528a56e8/www/docs/customization/archive.md#packaging-only-the-binaries
+    files:
+      - none*
+    rlcp: true
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ incminor .Tag }}-dev"
+
+dockers:
+  - image_templates:
+      - ghcr.io/makkes/garage:{{ .Version }}-amd64
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+  - image_templates:
+      - ghcr.io/makkes/garage:{{ .Version }}-arm64v8
+    use: buildx
+    goarch: arm64
+    build_flag_templates:
+      - "--platform=linux/arm64/v8"
+
+docker_manifests:
+  - name_template: ghcr.io/makkes/garage:{{ .Version }}
+    image_templates:
+      - ghcr.io/makkes/garage:{{ .Version }}-amd64
+      - ghcr.io/makkes/garage:{{ .Version }}-arm64v8

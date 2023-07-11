@@ -1,0 +1,58 @@
+name: OCI distribution 1.0 conformance
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run registry server
+        run: make run > /tmp/registry.log &
+      - name: Wait for server to become ready
+        run: |
+          for try in $(seq 1 10) ; do
+            sleep 5
+            echo "try ${try}"
+            curl -fs http://localhost:8080/v2 && break
+          done
+      - name: Run OCI Distribution Spec conformance tests
+        env:
+          OCI_ROOT_URL: http://localhost:8080
+          OCI_NAMESPACE: mytestorg/mytestrepo
+          OCI_CROSSMOUNT_NAMESPACE: cross/mount
+          OCI_TEST_PULL: 1
+          OCI_TEST_PUSH: 1
+          OCI_TEST_CONTENT_DISCOVERY: 1
+          OCI_TEST_CONTENT_MANAGEMENT: 1
+          OCI_HIDE_SKIPPED_WORKFLOWS: 0
+          OCI_DEBUG: 0
+          OCI_DELETE_MANIFEST_BEFORE_BLOBS: 0
+        run: |
+          git clone --depth=1 -b v1.0 https://github.com/opencontainers/distribution-spec
+          cd distribution-spec/conformance
+          go test -c
+          ./conformance.test
+        if: always()
+      - name: Collect test results
+        run: mkdir -p .out/ && mv distribution-spec/conformance/{report.html,junit.xml} .out/
+        if: always()
+      - name: Upload test results zip as build artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: oci-test-results-${{ github.sha }}
+          path: .out/
+        if: always()
+      - name: Upload registry server logs
+        if: failure()
+        uses: actions/upload-artifact@v1
+        with:
+          name: registry-logs
+          path: /tmp/registry.log
