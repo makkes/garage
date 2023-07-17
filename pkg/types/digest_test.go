@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/makkes/garage/pkg/types"
 	"github.com/opencontainers/go-digest"
+
+	"github.com/makkes/garage/pkg/types"
 )
 
 func TestNewDigest(t *testing.T) {

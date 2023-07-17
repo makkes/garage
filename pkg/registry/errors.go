@@ -1,8 +1,8 @@
 package registry
 
 const (
-	ERR_CODE_BLOB_UNKNOWN = "BLOB_UNKNOWN"
-	ERR_MANIFEST_INVALID = "MANIFEST_INVALID"
+	ErrCodeBlobUnknown     = "BLOB_UNKNOWN"
+	ErrCodeManifestInvalid = "MANIFEST_INVALID"
 )
 
 type Error struct {

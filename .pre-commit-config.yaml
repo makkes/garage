@@ -1,5 +1,8 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
+default_install_hook_types:
+- pre-commit
+- commit-msg
 repos:
 - repo: local
   hooks:
@@ -17,6 +20,7 @@ repos:
     stages: [commit]
   - id: end-of-file-fixer
     stages: [commit]
+    exclude: ^pkg/registry/testdata/
   - id: check-yaml
     stages: [commit]
   - id: check-added-large-files
@@ -38,8 +42,6 @@ repos:
   - id: check-executables-have-shebangs
     stages: [commit]
   - id: check-symlinks
-    stages: [commit]
-  - id: end-of-file-fixer
     stages: [commit]
 - repo: https://github.com/jorisroovers/gitlint
   rev: v0.16.0

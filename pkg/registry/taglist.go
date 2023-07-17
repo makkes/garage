@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/makkes/garage/pkg/storage"
 	"github.com/makkes/garage/pkg/types"
 )

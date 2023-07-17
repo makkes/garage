@@ -144,7 +144,7 @@ func (fs FileStorage) StoreManifest(mid types.ManifestID, data io.Reader) (retEr
 		return os.Remove(fn)
 	})
 
-	if err := os.WriteFile(filepath.Join(p, mid.Digest.String()), []byte(mid.Digest.String()), 0640); err != nil {
+	if err := os.WriteFile(filepath.Join(p, mid.Digest.String()), []byte(mid.Digest.String()), 0600); err != nil {
 		retErr = fmt.Errorf("failed creating digest manifest file: %w", err)
 		return
 	}
@@ -166,11 +166,10 @@ func (fs FileStorage) DeleteBlob(bid types.BlobID) error {
 }
 
 func ensureDir(path string) error {
-	dir := filepath.Join(path)
-	if _, err := os.Stat(dir); err != nil {
+	if _, err := os.Stat(path); err != nil {
 		if os.IsNotExist(err) {
-			if mkdErr := os.MkdirAll(dir, 0750); mkdErr != nil {
-				return fmt.Errorf("failed creating directory %q: %w", dir, mkdErr)
+			if mkdErr := os.MkdirAll(path, 0750); mkdErr != nil {
+				return fmt.Errorf("failed creating directory %q: %w", path, mkdErr)
 			}
 		} else {
 			return fmt.Errorf("failed checking directory: %w", err)
@@ -181,11 +180,12 @@ func ensureDir(path string) error {
 }
 
 func (fs FileStorage) getFilename(mid types.ManifestID) (string, error) {
-	if mid.Tag != nil {
+	switch {
+	case mid.Tag != nil:
 		return filepath.Join(fs.baseDir, mid.Namespace, mid.Repo, tagDirName, *mid.Tag), nil
-	} else if mid.Digest != nil {
+	case mid.Digest != nil:
 		return filepath.Join(fs.baseDir, mid.Namespace, mid.Repo, mid.Digest.String()), nil
-	} else {
+	default:
 		return "", fmt.Errorf("neither tag nor digest set for manifest")
 	}
 }
