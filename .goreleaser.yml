@@ -8,11 +8,6 @@ changelog:
       - '^chore:'
       - '^build:'
 
-release:
-  footer: |
-    ### Summary
-    **Full Changelog**: https://github.com/makkes/garage/compare/{{ .PreviousTag }}...{{ .Tag }}
-
 builds:
   - id: garage
     binary: garage
