@@ -1,14 +1,7 @@
 project_name: garage
 
 changelog:
-  use: github
-  groups:
-    - title: Features
-      regexp: "^.*feat[(\\w)]*:+.*$"
-      order: 0
-    - title: 'Bug fixes'
-      regexp: "^.*fix[(\\w)]*:+.*$"
-      order: 1
+  use: github-native
   filters:
     exclude:
       - '^docs:'
