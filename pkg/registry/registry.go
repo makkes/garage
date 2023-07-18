@@ -92,6 +92,10 @@ func (r Registry) Start(addr string) error {
 	return r.App.Listen(addr)
 }
 
+func (r Registry) StartTLS(addr, certFile, keyFile string) error {
+	return r.App.ListenTLS(addr, certFile, keyFile)
+}
+
 func (r Registry) Test(req *http.Request) (*http.Response, error) {
 	return r.App.Test(req)
 }
