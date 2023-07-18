@@ -1,6 +1,7 @@
 package storage_test
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/fs"
@@ -13,6 +14,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/makkes/garage/pkg/storage"
+	"github.com/makkes/garage/pkg/test/matchers"
 	"github.com/makkes/garage/pkg/types"
 )
 
@@ -20,11 +22,21 @@ func stringPtr(s string) *string {
 	return &s
 }
 
+func TestError(t *testing.T) {
+	g := NewWithT(t)
+
+	err1 := storage.ErrNotFound{Err: fmt.Errorf("err 1")}
+	err2 := storage.ErrNotFound{Err: fmt.Errorf("err 2")}
+
+	is := errors.As(err1, &err2)
+	g.Expect(is).To(BeTrue())
+}
+
 func TestTags(t *testing.T) {
 	tests := []struct {
 		name     string
 		ns, repo string
-		expErr   string
+		expErr   error
 		expTags  []string
 	}{
 		{
@@ -37,7 +49,7 @@ func TestTags(t *testing.T) {
 			name:   "listing tags in unknown repo fails",
 			ns:     "does-not-exist",
 			repo:   "repo",
-			expErr: "no such file or directory",
+			expErr: storage.ErrNotFound{},
 		},
 	}
 
@@ -56,8 +68,8 @@ func TestTags(t *testing.T) {
 
 			// Then
 
-			if tt.expErr != "" {
-				g.Expect(err).To(MatchError(ContainSubstring(tt.expErr)))
+			if tt.expErr != nil {
+				g.Expect(err).To(matchers.BeAssignableToError(tt.expErr))
 			}
 			g.Expect(tags).To(Equal(tt.expTags), "unexpected tag list received")
 		})
@@ -153,6 +165,96 @@ func TestStoreManifestWritesCorrectDataToDisk(t *testing.T) {
 		}
 		return nil
 	})).To(Succeed())
+}
+
+func TestDeleteManifestWritesCorrectDataToDisk(t *testing.T) {
+	g := NewWithT(t)
+
+	manifest := `{"some":"manifest"}`
+	dig, err := types.NewDigest(types.AlgoSHA256, strings.NewReader(manifest))
+	g.Expect(err).NotTo(HaveOccurred(), "failed calculating digest")
+
+	tests := []struct {
+		name          string
+		storeMid      types.ManifestID
+		deleteMid     types.ManifestID
+		expectedFiles []string
+	}{
+		{
+			name: "delete by tag",
+			storeMid: types.ManifestID{
+				Namespace: "foo-ns",
+				Repo:      "bar-repo",
+				Tag:       stringPtr("baz-tag"),
+				Digest:    &dig,
+			},
+			deleteMid: types.ManifestID{
+				Namespace: "foo-ns",
+				Repo:      "bar-repo",
+				Tag:       stringPtr("baz-tag"),
+				Digest:    &dig,
+			},
+			expectedFiles: []string{
+				filepath.Join("_blobs", dig.String()),
+				filepath.Join("foo-ns", "bar-repo", "_blobs", dig.String()),
+				filepath.Join("foo-ns", "bar-repo", dig.String()),
+			},
+		},
+		{
+			name: "delete by digest",
+			storeMid: types.ManifestID{
+				Namespace: "foo-ns",
+				Repo:      "bar-repo",
+				Tag:       stringPtr("another-tag"),
+				Digest:    &dig,
+			},
+			deleteMid: types.ManifestID{
+				Namespace: "foo-ns",
+				Repo:      "bar-repo",
+				Tag:       nil,
+				Digest:    &dig,
+			},
+			expectedFiles: []string{
+				filepath.Join("_blobs", dig.String()),
+				filepath.Join("foo-ns", "bar-repo", "_blobs", dig.String()),
+				filepath.Join("foo-ns", "bar-repo", "_tags", "another-tag"),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			g := NewWithT(t)
+
+			// Given
+
+			storeDir := t.TempDir()
+			store, _ := storage.NewFileStorage(storeDir, logr.Discard())
+			g.Expect(store.StoreManifest(tt.storeMid, strings.NewReader(manifest))).To(Succeed(), "storing manifest failed")
+
+			// When
+
+			g.Expect(store.DeleteManifest(tt.deleteMid)).To(Succeed(), "deleting manifest failed")
+
+			// Then
+
+			expectedFiles := make(map[string]bool, len(tt.expectedFiles))
+			for _, ef := range tt.expectedFiles {
+				expectedFiles[filepath.Join(storeDir, ef)] = false
+			}
+			g.Expect(filepath.WalkDir(storeDir, func(path string, d fs.DirEntry, err error) error {
+				if _, has := expectedFiles[path]; !d.IsDir() && !has {
+					return fmt.Errorf("unexpected non-dir encountered: %s. Expected: %v", path, tt.expectedFiles)
+				}
+				expectedFiles[path] = true
+				return nil
+			})).To(Succeed())
+
+			for p, found := range expectedFiles {
+				g.Expect(found).To(BeTrue(), "expected file %s to exist but it did not", p)
+			}
+		})
+	}
 }
 
 func contains(ss []string, s string) bool {

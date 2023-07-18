@@ -58,7 +58,7 @@ func main() {
 
 	laddr := fmt.Sprintf("%s:%d", cfg.V.GetString(cfgp.KeyListenHost), cfg.V.GetInt(cfgp.KeyListenPort))
 
-	fmt.Fprintf(os.Stderr, "starting server at %s\n", laddr)
+	fmt.Fprintf(os.Stderr, "starting server at %s, serving from %s\n", laddr, fsDir)
 
 	if err := r.Start(laddr); err != nil {
 		fmt.Fprintf(os.Stderr, "failed starting server: %s\n", err)
