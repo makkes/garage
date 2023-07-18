@@ -18,7 +18,7 @@ jobs:
         with:
           extra_args: --all-files --show-diff-on-failure
         env:
-          SKIP: lint-go-code
+          SKIP: lint-go-code,no-commit-to-branch
 
   lint:
     runs-on: ubuntu-latest
