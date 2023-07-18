@@ -29,7 +29,7 @@ func (r Registry) handleManifestPush(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).
 			JSON(ErrorResponse{
 				Errors: []Error{{
-					Code:    ERR_MANIFEST_INVALID,
+					Code:    ErrCodeManifestInvalid,
 					Message: "manifest is empty",
 				}},
 			})
@@ -52,7 +52,7 @@ func (r Registry) handleManifestPush(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).
 			JSON(ErrorResponse{
 				Errors: []Error{{
-					Code:    ERR_MANIFEST_INVALID,
+					Code:    ErrCodeManifestInvalid,
 					Message: "failed unmarshaling body",
 				}},
 			})

@@ -139,7 +139,6 @@ func (r Registry) validateBlobPath(c *fiber.Ctx) error {
 	}))
 
 	return c.Next()
-
 }
 
 func (r Registry) validateManifestPath(c *fiber.Ctx) error {
@@ -151,13 +150,14 @@ func (r Registry) validateManifestPath(c *fiber.Ctx) error {
 
 	var tag string
 	var dig types.Digest
-	if r.tagRE.MatchString(ref) {
+	switch {
+	case r.tagRE.MatchString(ref):
 		tag = ref
-	} else if r.digRE.MatchString(ref) {
+	case r.digRE.MatchString(ref):
 		sp := strings.Split(ref, ":")
 		dig.Algo = sp[0]
 		dig.Enc = sp[1]
-	} else {
+	default:
 		return fiber.NewError(fiber.StatusNotFound, "wrong reference path")
 	}
 

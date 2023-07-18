@@ -6,8 +6,9 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/go-logr/zapr"
 	"github.com/gofiber/fiber/v2"
-	"github.com/makkes/garage/pkg/storage"
 	"go.uber.org/zap"
+
+	"github.com/makkes/garage/pkg/storage"
 )
 
 func (r *Registry) applyDefaults() error {

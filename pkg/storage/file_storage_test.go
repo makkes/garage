@@ -43,7 +43,6 @@ func TestTags(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
 			g := NewWithT(t)
 
 			// Given
@@ -82,7 +81,7 @@ func TestStoreManifestFailsWithWrongDigest(t *testing.T) {
 		Digest:    &dig,
 	}
 
-	manifest := `{"foo":"bar"}`
+	manifest := `{"some":"manifest"}`
 
 	// When
 
@@ -93,7 +92,7 @@ func TestStoreManifestFailsWithWrongDigest(t *testing.T) {
 		)
 
 	expectedFiles := []string{
-		filepath.Join(storeDir, "_blobs", "sha256:7a38bf81f383f69433ad6e900d35b3e2385593f76a7b7ab5d4355b8ba41ee24b"),
+		filepath.Join(storeDir, "_blobs", "sha256:12fa8bca3fe74bc436b1068c5bda9c82f3f4d3583a3ca1ded704cb43968ed9d4"),
 	}
 	g.Expect(filepath.WalkDir(storeDir, func(path string, d fs.DirEntry, err error) error {
 		if !d.IsDir() && !contains(expectedFiles, path) {

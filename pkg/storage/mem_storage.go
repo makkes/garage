@@ -2,7 +2,7 @@ package storage
 
 import (
 	"bytes"
-	"crypto/sha1"
+	"crypto/sha256"
 	"fmt"
 	"io"
 
@@ -12,7 +12,7 @@ import (
 )
 
 type MemStorage struct {
-	manifests map[[sha1.Size]byte]types.Digest
+	manifests map[[sha256.Size]byte]types.Digest
 	blobs     map[types.BlobID][]byte
 }
 
@@ -20,7 +20,7 @@ var _ Storage = MemStorage{}
 
 func NewMemStorage() MemStorage {
 	return MemStorage{
-		manifests: make(map[[sha1.Size]byte]types.Digest),
+		manifests: make(map[[sha256.Size]byte]types.Digest),
 		blobs:     make(map[types.BlobID][]byte),
 	}
 }
@@ -102,7 +102,6 @@ func (m MemStorage) DeleteBlob(_ types.BlobID) error {
 	panic("not implemented") // TODO: Implement
 }
 
-
 func (m MemStorage) FetchManifest(id types.ManifestID) (io.ReadCloser, error) {
 	var dig types.Digest
 	if id.Digest != nil {
@@ -132,7 +131,7 @@ func (m MemStorage) Has(id types.ManifestID) (bool, error) {
 	return ok, nil
 }
 
-func hash(m types.ManifestID) [sha1.Size]byte {
+func hash(m types.ManifestID) [sha256.Size]byte {
 	var buf bytes.Buffer
 
 	buf.WriteString(m.Namespace)
@@ -145,5 +144,5 @@ func hash(m types.ManifestID) [sha1.Size]byte {
 		buf.WriteString(m.Digest.Enc)
 	}
 
-	return sha1.Sum(buf.Bytes())
+	return sha256.Sum256(buf.Bytes())
 }

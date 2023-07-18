@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/google/uuid"
+
 	"github.com/makkes/garage/pkg/types"
 )
 

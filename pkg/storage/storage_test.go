@@ -8,10 +8,10 @@ import (
 
 	"github.com/go-logr/logr"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gbytes"
 
 	"github.com/makkes/garage/pkg/storage"
 	"github.com/makkes/garage/pkg/types"
-	"github.com/onsi/gomega/gbytes"
 )
 
 var impls = map[string]func(*testing.T) storage.Storage{
@@ -20,7 +20,7 @@ var impls = map[string]func(*testing.T) storage.Storage{
 		s, _ := storage.NewFileStorage(dir, logr.Discard())
 		return s
 	},
-	"mem storage": func(t *testing.T) storage.Storage {
+	"mem storage": func(_ *testing.T) storage.Storage {
 		return storage.NewMemStorage()
 	},
 }

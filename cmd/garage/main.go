@@ -6,11 +6,12 @@ import (
 
 	"github.com/go-logr/zapr"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+
 	cfgp "github.com/makkes/garage/pkg/cfg"
 	"github.com/makkes/garage/pkg/registry"
 	"github.com/makkes/garage/pkg/storage"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 func main() {

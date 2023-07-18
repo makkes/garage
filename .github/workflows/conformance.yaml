@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  run:
     permissions:
       contents: read
     runs-on: ubuntu-latest

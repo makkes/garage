@@ -9,13 +9,13 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/go-logr/stdr"
+	. "github.com/onsi/gomega"
+
 	"github.com/makkes/garage/pkg/registry"
 	"github.com/makkes/garage/pkg/storage"
-	. "github.com/onsi/gomega"
 )
 
 func TestPullManifest(t *testing.T) {
-
 	tests := []struct {
 		name                string
 		path                string
