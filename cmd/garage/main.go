@@ -58,9 +58,21 @@ func main() {
 
 	laddr := fmt.Sprintf("%s:%d", cfg.V.GetString(cfgp.KeyListenHost), cfg.V.GetInt(cfgp.KeyListenPort))
 
-	fmt.Fprintf(os.Stderr, "starting server at %s, serving from %s\n", laddr, fsDir)
+	start := func() error {
+		fmt.Fprintf(os.Stderr, "starting server at %s, serving from %s\n", laddr, fsDir)
+		return r.Start(laddr)
+	}
 
-	if err := r.Start(laddr); err != nil {
+	certFile := cfg.V.GetString(cfgp.KeyTLSCertFile)
+	keyFile := cfg.V.GetString(cfgp.KeyTLSKeyFile)
+	if certFile != "" && keyFile != "" {
+		start = func() error {
+			fmt.Fprintf(os.Stderr, "starting TLS server at %s, serving from %s\n", laddr, fsDir)
+			return r.StartTLS(laddr, certFile, keyFile)
+		}
+	}
+
+	if err := start(); err != nil {
 		fmt.Fprintf(os.Stderr, "failed starting server: %s\n", err)
 		os.Exit(1)
 	}

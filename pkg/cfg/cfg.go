@@ -10,11 +10,13 @@ import (
 )
 
 const (
-	KeyListenHost = "host"
-	KeyListenPort = "port"
-	KeyDataDir    = "data-dir"
-	KeyVerbosity  = "verbosity"
-	KeyHelp       = "help"
+	KeyListenHost  = "host"
+	KeyListenPort  = "port"
+	KeyDataDir     = "data-dir"
+	KeyVerbosity   = "verbosity"
+	KeyHelp        = "help"
+	KeyTLSCertFile = "tls-cert-file"
+	KeyTLSKeyFile  = "tls-key-file"
 )
 
 type Config struct {
@@ -46,6 +48,8 @@ func InitViper() (Config, error) {
 	cfg.FS.IntP(KeyListenPort, "p", cfg.V.GetInt(KeyListenPort), "Port to bind to")
 	cfg.FS.String(KeyDataDir, cfg.V.GetString(KeyDataDir), "Directory for storing all data")
 	cfg.FS.IntP(KeyVerbosity, "v", cfg.V.GetInt(KeyVerbosity), "Number for the log level verbosity (higher is more verbose)")
+	cfg.FS.String(KeyTLSCertFile, cfg.V.GetString(KeyTLSCertFile), "Certificate file for serving HTTPS")
+	cfg.FS.String(KeyTLSKeyFile, cfg.V.GetString(KeyTLSKeyFile), "Key file for serving HTTPS")
 	cfg.FS.BoolP(KeyHelp, "h", false, "Show this help")
 
 	if err := cfg.FS.Parse(os.Args[1:]); err != nil {
