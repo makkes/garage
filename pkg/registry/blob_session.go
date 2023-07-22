@@ -58,7 +58,7 @@ func (r Registry) handleBlobGet(c *fiber.Ctx) error {
 
 func (r Registry) handleBlobPatch(c *fiber.Ctx) error {
 	ct := c.Request().Header.ContentType()
-	if string(ct) != "application/octet-stream" {
+	if len(ct) != 0 && string(ct) != "application/octet-stream" {
 		r.log.V(8).Info("POST request with invalid content type", "content-type", ct)
 		return c.Status(fiber.StatusBadRequest).
 			SendString(fmt.Sprintf("content-type must be 'application/octet-stream' but is %q", string(ct)))
