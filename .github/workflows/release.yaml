@@ -10,10 +10,11 @@ permissions:
   packages: write
 jobs:
   release:
-    env:
-      TAG: "${GITHUB_REF/refs\/tags\//}"
     runs-on: ubuntu-latest
     steps:
+      - name: Extract tag
+        run: |
+          echo "TAG="${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_ENV"
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up Docker Buildx
