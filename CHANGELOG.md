@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Project license is now [GNU General Public License v3.0 or later](https://spdx.org/licenses/GPL-3.0-or-later.html)
+
 ## [0.0.4] - 2023-07-25
 
 ### Changed
@@ -30,7 +36,7 @@ no changes
 
 - Initial release
 
-[unreleased]: [0.0.2]: https://github.com/makkes/garage/compare/v0.0.4...HEAD
+[unreleased]: https://github.com/makkes/garage/compare/v0.0.4...HEAD
 [0.0.4]: https://github.com/makkes/garage/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/makkes/garage/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/makkes/garage/compare/v0.0.1...v0.0.2
