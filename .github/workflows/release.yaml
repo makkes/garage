@@ -25,3 +25,8 @@ jobs:
       - name: Publish images
         run: |
           make docker-build BUILD_ARGS='--push' TAG="${GITHUB_REF/refs\/tags\//}"
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: |
+            See [the changelog](https://github.com/makkes/garage/blob/"${GITHUB_REF/refs\/tags\//}"/CHANGELOG.md) for details.
