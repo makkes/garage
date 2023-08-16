@@ -9,6 +9,7 @@ updates:
       interval: "weekly"
     groups:
       go-deps:
+        patterns:
         - "*"
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -16,4 +17,5 @@ updates:
       interval: "weekly"
     groups:
       actions:
+        patterns:
         - "*"
