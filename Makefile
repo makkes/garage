@@ -1,7 +1,9 @@
-GORELEASER_DEBUG ?= false
-GORELEASER_PARALLELISM ?= $(shell nproc --ignore=1)
 GOOS ?= $(shell go env GOOS)
 GOARCH ?= $(shell go env GOARCH)
+BUILD_PLATFORMS ?= linux/amd64,linux/arm64,linux/arm/v7
+BUILD_ARGS ?=
+IMG ?= ghcr.io/makkes/garage
+TAG ?= latest
 
 .PHONY: test
 test:
@@ -20,22 +22,9 @@ lint:
 tidy:
 	go mod tidy
 
-
-.PHONY: build-snapshot
-build-snapshot:
-	goreleaser --debug=$(GORELEASER_DEBUG) \
-		build \
-		--snapshot \
-		--clean \
-		--parallelism=$(GORELEASER_PARALLELISM) \
-		--single-target \
-		--skip-post-hooks
-
-.PHONY: release-snapshot
-release-snapshot:
-	goreleaser --debug=$(GORELEASER_DEBUG) \
-		release \
-		--snapshot \
-		--clean \
-		--parallelism=$(GORELEASER_PARALLELISM) \
-		--skip-publish
+.PHONY: docker-build
+docker-build:
+	docker buildx build \
+		--platform=$(BUILD_PLATFORMS) \
+		-t $(IMG):$(TAG) \
+		$(BUILD_ARGS) .
