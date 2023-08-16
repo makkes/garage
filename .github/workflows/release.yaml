@@ -10,6 +10,8 @@ permissions:
   packages: write
 jobs:
   release:
+    env:
+      TAG: "${GITHUB_REF/refs\/tags\//}"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,9 +26,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish images
         run: |
-          make docker-build BUILD_ARGS='--push' TAG="${GITHUB_REF/refs\/tags\//}"
+          make docker-build BUILD_ARGS='--push'
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
           body: |
-            See [the changelog](https://github.com/makkes/garage/blob/"${GITHUB_REF/refs\/tags\//}"/CHANGELOG.md) for details.
+            See [the changelog](https://github.com/makkes/garage/blob/${TAG}/CHANGELOG.md) for details.
