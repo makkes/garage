@@ -1,3 +1,2 @@
 [general]
-contrib=contrib-title-conventional-commits
 ignore=body-is-missing
