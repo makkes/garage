@@ -8,7 +8,7 @@ require (
 	github.com/go-logr/zapr v1.2.4
 	github.com/gofiber/fiber/v2 v2.50.0
 	github.com/google/uuid v1.3.1
-	github.com/onsi/gomega v1.28.0
+	github.com/onsi/gomega v1.28.1
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.17.0
@@ -18,7 +18,7 @@ require (
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
