@@ -8,7 +8,7 @@ require (
 	github.com/go-logr/zapr v1.3.0
 	github.com/gofiber/fiber/v2 v2.50.0
 	github.com/google/uuid v1.4.0
-	github.com/onsi/gomega v1.29.0
+	github.com/onsi/gomega v1.30.0
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.17.0
