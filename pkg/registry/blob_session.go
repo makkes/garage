@@ -11,6 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 
+	"github.com/makkes/garage/pkg/features"
 	"github.com/makkes/garage/pkg/storage"
 	"github.com/makkes/garage/pkg/types"
 )
@@ -140,6 +141,9 @@ func (r Registry) handleBlobPut(c *fiber.Ctx) error {
 	}
 
 	c.Set(fiber.HeaderLocation, fmt.Sprintf("/v2/%s/%s/blobs/%s", bid.Namespace, bid.Repo, resDig))
+	if r.features.Enabled(features.SendLegacyDigestHeader) {
+		c.Set("Docker-Content-Digest", resDig.String())
+	}
 
 	return c.SendStatus(fiber.StatusCreated)
 }

@@ -11,6 +11,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
+	"github.com/makkes/garage/pkg/features"
 	"github.com/makkes/garage/pkg/types"
 )
 
@@ -97,6 +98,9 @@ func (r Registry) handleManifestPush(c *fiber.Ctx) error {
 	}
 
 	c.Set(fiber.HeaderLocation, fmt.Sprintf("/v2/%s/%s/manifests/%s", mid.Namespace, mid.Repo, mid.Ref()))
+	if r.features.Enabled(features.SendLegacyDigestHeader) {
+		c.Set("Docker-Content-Digest", mid.Digest.String())
+	}
 
 	return c.SendStatus(fiber.StatusCreated)
 }

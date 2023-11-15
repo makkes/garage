@@ -14,6 +14,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 
+	"github.com/makkes/garage/pkg/features"
 	"github.com/makkes/garage/pkg/storage"
 	"github.com/makkes/garage/pkg/types"
 )
@@ -43,6 +44,7 @@ type Registry struct {
 	maxManifestBytes int64
 	store            storage.Storage
 	uploadSessions   map[string]string
+	features         features.Features
 }
 
 func New(opts ...Opt) (Registry, error) {
