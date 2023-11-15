@@ -11,6 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 
+	"github.com/makkes/garage/pkg/features"
 	"github.com/makkes/garage/pkg/storage"
 )
 
@@ -36,6 +37,13 @@ func (r *Registry) applyDefaults() error {
 	}
 
 	return nil
+}
+
+func WithFeatures(f features.Features) Opt {
+	return func(r *Registry) error {
+		r.features = f
+		return nil
+	}
 }
 
 func WithMaxManifestBytes(b int64) Opt {

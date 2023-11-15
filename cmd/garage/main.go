@@ -50,6 +50,7 @@ func main() {
 	}
 
 	r, err := registry.New(
+		registry.WithFeatures(cfg.Features),
 		registry.WithFileStorage(s),
 		registry.WithMiddleware(logger.New()),
 		registry.WithLogger(log.WithName("registry")),

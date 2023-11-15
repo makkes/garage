@@ -10,6 +10,8 @@ import (
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+
+	"github.com/makkes/garage/pkg/features"
 )
 
 const (
@@ -23,8 +25,9 @@ const (
 )
 
 type Config struct {
-	V  *viper.Viper
-	FS *pflag.FlagSet
+	V        *viper.Viper
+	FS       *pflag.FlagSet
+	Features features.Features
 }
 
 func InitViper() (Config, error) {
@@ -54,6 +57,9 @@ func InitViper() (Config, error) {
 	cfg.FS.String(KeyTLSCertFile, cfg.V.GetString(KeyTLSCertFile), "Certificate file for serving HTTPS")
 	cfg.FS.String(KeyTLSKeyFile, cfg.V.GetString(KeyTLSKeyFile), "Key file for serving HTTPS")
 	cfg.FS.BoolP(KeyHelp, "h", false, "Show this help")
+
+	cfg.Features = features.Features{}
+	cfg.Features.BindFlags(cfg.FS)
 
 	if err := cfg.FS.Parse(os.Args[1:]); err != nil {
 		return cfg, fmt.Errorf("failed parsing command-line flags: %w", err)
