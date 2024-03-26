@@ -32,6 +32,6 @@ jobs:
         run: |
           echo "See [the changelog](https://github.com/makkes/garage/blob/v${TAG}/CHANGELOG.md) for details." > /tmp/relnotes.txt
       - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           body_path: /tmp/relnotes.txt
