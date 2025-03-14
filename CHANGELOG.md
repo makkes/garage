@@ -1,6 +1,16 @@
 # Changelog
 
+## [0.1.1] - 2025-03-14
+
+[all changes](https://github.com/makkes/garage/compare/v0.1.0...v0.1.1)
+
+### Changed
+
+- Various library updates
+
 ## [0.1.0] - 2023-11-15
+
+[all changes](https://github.com/makkes/garage/compare/v0.0.5...v0.1.0)
 
 ### Changed
 
@@ -8,6 +18,8 @@
 - Library updates
 
 ## [0.0.5] - 2023-09-11
+
+[all changes](https://github.com/makkes/garage/compare/v0.0.4...v0.0.5)
 
 ### Changed
 
@@ -20,6 +32,8 @@
 
 ## [0.0.4] - 2023-07-25
 
+[all changes](https://github.com/makkes/garage/compare/v0.0.3...v0.0.4)
+
 ### Changed
 
 - Remove unnecessary footer from release notes template
@@ -27,6 +41,8 @@
 
 
 ## [0.0.3] - 2023-07-18
+
+[all changes](https://github.com/makkes/garage/compare/v0.0.2...v0.0.3)
 
 ### Added
 
@@ -47,10 +63,3 @@ no changes
 ### Added
 
 - Initial release
-
-[0.1.0]: https://github.com/makkes/garage/compare/v0.0.5...v0.1.0
-[0.0.5]: https://github.com/makkes/garage/compare/v0.0.4...v0.0.5
-[0.0.4]: https://github.com/makkes/garage/compare/v0.0.3...v0.0.4
-[0.0.3]: https://github.com/makkes/garage/compare/v0.0.2...v0.0.3
-[0.0.2]: https://github.com/makkes/garage/compare/v0.0.1...v0.0.2
-[0.0.1]: https://github.com/makkes/garage/releases/tag/v0.0.1
