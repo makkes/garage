@@ -5,6 +5,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 
 	"github.com/go-logr/zapr"
@@ -16,6 +17,13 @@ import (
 	"github.com/makkes/garage/pkg/registry"
 	"github.com/makkes/garage/pkg/storage"
 )
+
+func toInt8(i int) (int8, error) {
+	if i > math.MaxInt8 || i < math.MinInt8 {
+		return 0, fmt.Errorf("overflow of %d", i)
+	}
+	return int8(i), nil
+}
 
 func main() {
 	cfg, err := cfgp.InitViper()
@@ -30,7 +38,12 @@ func main() {
 	}
 
 	fsDir := cfg.V.GetString(cfgp.KeyDataDir)
-	verbosity := cfg.V.GetInt(cfgp.KeyVerbosity)
+	var verbosity int8
+	verbosity, err = toInt8(cfg.V.GetInt(cfgp.KeyVerbosity))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "conversion of verbosity flag failed: %s", err)
+		os.Exit(1)
+	}
 
 	zlog := zap.New(
 		zapcore.NewCore(
