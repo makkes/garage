@@ -3,10 +3,10 @@ module github.com/makkes/garage
 go 1.24
 
 require (
-	github.com/go-logr/logr v1.4.2
+	github.com/go-logr/logr v1.4.3
 	github.com/go-logr/stdr v1.2.2
 	github.com/go-logr/zapr v1.3.0
-	github.com/gofiber/fiber/v2 v2.52.7
+	github.com/gofiber/fiber/v2 v2.52.8
 	github.com/google/uuid v1.6.0
 	github.com/onsi/gomega v1.37.0
 	github.com/opencontainers/go-digest v1.0.0
