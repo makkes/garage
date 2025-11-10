@@ -17,12 +17,7 @@ jobs:
       - name: Run registry server
         run: make run > /tmp/registry.log &
       - name: Wait for server to become ready
-        run: |
-          for try in $(seq 1 10) ; do
-            sleep 5
-            echo "try ${try}"
-            curl -fs http://localhost:8080/v2 && break
-          done
+        run: curl --retry-all-errors --retry 9 --retry-delay 5 -f http://localhost:8080/v2
       - name: Run OCI Distribution Spec conformance tests
         env:
           OCI_ROOT_URL: http://localhost:8080
@@ -45,14 +40,16 @@ jobs:
         run: mkdir -p .out/ && mv distribution-spec/conformance/{report.html,junit.xml} .out/
         if: always()
       - name: Upload test results zip as build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: oci-test-results-${{ github.sha }}
+          include-hidden-files: true
+          if-no-files-found: error
           path: .out/
         if: always()
       - name: Upload registry server logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: registry-logs
           path: /tmp/registry.log
